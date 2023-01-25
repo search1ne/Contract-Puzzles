@@ -1,22 +1,21 @@
-const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { assert } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('Game2', function () {
-  async function deployContractAndSetVariables() {
+  it('should be a winner', async function () {
+    // 1. Deploy the contract
     const Game = await ethers.getContractFactory('Game2');
     const game = await Game.deploy();
+   
+    // 2. Switch on the keys
+    await game.switchOn(20);
+    await game.switchOn(47);
+    await game.switchOn(212);
 
-    return { game };
-  }
-
-  it('should be a winner', async function () {
-    const { game } = await loadFixture(deployContractAndSetVariables);
-
-    // press all the right switches to win this stage
-
+    // 3. Win the game
     await game.win();
 
-    // leave this assertion as-is
+    // 4. leave assertion as-is
     assert(await game.isWon(), 'You did not win the game');
-  });
+  });  
 });
